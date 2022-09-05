@@ -47,8 +47,11 @@ def get_db():
         MFLIX_DB_URI,
         # TODO: Connection Pooling
         # Set the maximum connection pool size to 50 active connections.
+        maxPoolSize=50,
         # TODO: Timeouts
         # Set the write timeout limit to 2500 milliseconds.
+        w="majority",
+        wTimeoutMS=2500,
         )[MFLIX_DB_NAME]
     return db
 
@@ -309,15 +312,20 @@ def get_movie(id):
 
     # TODO: Error Handling
     # If an invalid ID is passed to `get_movie`, it should return None.
-    except (StopIteration) as _:
+    except (StopIteration, InvalidId) as _:
 
         """
         Ticket: Error Handling
-
         Handle the InvalidId exception from the BSON library the same way as the
         StopIteration exception is handled. Both exceptions should result in
         `get_movie` returning None.
         """
+
+        return None
+
+    except Exception as e:
+        return {'error': e}
+
 
         return None
 
